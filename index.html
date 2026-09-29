@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Retour vers ton site</title>
+<style>
+  body{margin:0;min-height:100vh;display:grid;place-items:center;background:#07090d;color:#eef2f6;
+       font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  main{max-width:34em;padding:24px;text-align:center}
+  a{color:#25f4ee}
+  small{color:#7d8997}
+</style>
+</head>
+<body>
+<main>
+  <h1>Retour vers ton site...</h1>
+  <p id="info">TikTok a donne son accord : tu vas etre renvoye vers le site qui tourne sur ton ordinateur.</p>
+  <p><a id="lien" href="#">Clique ici si rien ne se passe.</a></p>
+  <p><small>La fenetre noire du site doit etre ouverte.</small></p>
+</main>
+<script>
+  // Cette page ne garde rien et n'envoie rien ailleurs : elle renvoie la
+  // reponse de TikTok vers le site sur ton ordinateur. Le code qu'elle
+  // transmet ne sert a rien sans le Client secret, qui reste sur ton PC.
+  // Le port du site voyage dans « state » (p3737.xxxx).
+  var params = new URLSearchParams(location.search);
+  var port = /^p(\d{2,5})\./.exec(params.get('state') || '');
+  var cible = 'http://127.0.0.1:' + (port ? port[1] : '3737') + '/auth/tiktok/callback' + location.search;
+  document.getElementById('lien').href = cible;
+  if (params.has('code') || params.has('error')) {
+    location.replace(cible);
+  } else {
+    document.getElementById('info').textContent =
+      'Cette page sert de relais pour connecter TikTok au site. Il n\'y a rien a faire ici.';
+  }
+</script>
+</body>
+</html>
